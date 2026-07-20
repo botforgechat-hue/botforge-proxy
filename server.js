@@ -10,6 +10,7 @@ const ANTHROPIC_KEY = 'sk-ant-api03-aNut_dDr_FW8paNZiXws36DptAd61dszEK1LjFd7nipU
 
 app.post('/chat', async (req, res) => {
   try {
+    console.log('Incoming request:', JSON.stringify(req.body).substring(0, 200));
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -18,15 +19,18 @@ app.post('/chat', async (req, res) => {
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
+        model: 'claude-haiku-4-5-20251001',
         max_tokens: 500,
-        system: req.body.system,
-        messages: req.body.messages
+        system: req.body.system || 'You are a helpful assistant.',
+        messages: req.body.messages || []
       })
     });
     const data = await response.json();
+    console.log('Anthropic response status:', response.status);
+    console.log('Anthropic response:', JSON.stringify(data).substring(0, 300));
     res.json(data);
   } catch (err) {
+    console.error('Error:', err.message);
     res.status(500).json({ error: err.message });
   }
 });
