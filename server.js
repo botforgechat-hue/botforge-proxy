@@ -6,7 +6,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const ANTHROPIC_KEY = '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';
+const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY; // set in Railway, never in code
 
 function cleanMarkdown(text) {
   return text
